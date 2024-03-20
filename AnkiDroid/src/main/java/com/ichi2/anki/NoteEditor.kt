@@ -451,9 +451,6 @@ class NoteEditor : AnkiActivity(), DeckSelectionListener, SubtitleListener, Tags
         savedInstanceState.putStringArrayList("tags", selectedTags?.let { ArrayList(it) })
     }
 
-    private val fieldsAsBundleForPreview: Bundle
-        get() = NoteService.getFieldsAsBundleForPreview(editFields, shouldReplaceNewlines())
-
     // Finish initializing the activity after the collection has been correctly loaded
     override fun onCollectionLoaded(col: Collection) {
         super.onCollectionLoaded(col)
@@ -650,7 +647,7 @@ class NoteEditor : AnkiActivity(), DeckSelectionListener, SubtitleListener, Tags
         // set focus to FieldEditText 'first' on startup like Anki desktop
         if (editFields != null && !editFields!!.isEmpty()) {
             // EXTRA_TEXT_FROM_SEARCH_VIEW takes priority over other intent inputs
-            if (getTextFromSearchView != null && getTextFromSearchView.isNotEmpty()) {
+            if (!getTextFromSearchView.isNullOrEmpty()) {
                 editFields!!.first!!.setText(getTextFromSearchView)
             }
             editFields!!.first!!.requestFocus()
@@ -814,9 +811,9 @@ class NoteEditor : AnkiActivity(), DeckSelectionListener, SubtitleListener, Tags
         }
     }
 
-    private fun addFromAedict(extra_text: String?): Boolean {
+    private fun addFromAedict(extraText: String?): Boolean {
         var category: String
-        val notepadLines = extra_text!!.split("\n".toRegex()).toTypedArray()
+        val notepadLines = extraText!!.split("\n".toRegex()).toTypedArray()
         for (i in notepadLines.indices) {
             if (notepadLines[i].startsWith("[") && notepadLines[i].endsWith("]")) {
                 category = notepadLines[i].substring(1, notepadLines[i].length - 1)
